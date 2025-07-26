@@ -1,0 +1,36 @@
+name: Test Iris API Deployment
+
+on:
+  workflow_dispatch:  # Manual trigger from GitHub UI
+
+jobs:
+  test-api:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Call Iris FastAPI endpoint
+      run: |
+        echo "Testing Iris API endpoint..."
+
+        response=$(curl -s -w "\n%{http_code}" -X POST http://34.132.24.167/predict \
+          -H "Content-Type: application/json" \
+          -d '{
+                "sepal_length": 5.1,
+                "sepal_width": 3.5,
+                "petal_length": 1.4,
+                "petal_width": 0.2
+              }')
+
+        body=$(echo "$response" | head -n 1)
+        code=$(echo "$response" | tail -n 1)
+
+        echo "Status code: $code"
+        echo "Response body: $body"
+
+        if [ "$code" -ne 200 ]; then
+          echo "❌ API test failed with status $code"
+          exit 1
+        fi
+
+        echo "✅ API test passed!"
+
