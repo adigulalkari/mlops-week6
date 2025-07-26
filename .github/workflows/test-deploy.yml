@@ -12,7 +12,7 @@ jobs:
       run: |
         echo "Testing Iris API endpoint..."
 
-        response=$(curl -s -w "\n%{http_code}" -X POST http://34.132.24.167/predict \
+        response=$(curl -s -w "\n%{http_code}" -X POST http://34.132.24.167:8000/predict \
           -H "Content-Type: application/json" \
           -d '{
                 "sepal_length": 5.1,
